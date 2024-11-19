@@ -1,7 +1,7 @@
-```python
 import os
 
-def create_folders(main_folder_path, num_folders=1000):
+def create_folders(main_folder_path, folder_prefix, num_folders):
+    """Creates a specified number of folders with a given prefix."""
     # Ensure the main folder exists
     if not os.path.exists(main_folder_path):
         os.makedirs(main_folder_path)
@@ -11,15 +11,34 @@ def create_folders(main_folder_path, num_folders=1000):
 
     # Create the subfolders
     for i in range(1, num_folders + 1):
-        folder_path = os.path.join(main_folder_path, str(i))
+        folder_name = f"{folder_prefix}{i}"
+        folder_path = os.path.join(main_folder_path, folder_name)
         try:
             os.makedirs(folder_path)
-            print(f"Folder '{i}' created.")
+            print(f"Folder '{folder_name}' created.")
         except FileExistsError:
-            print(f"Folder '{i}' already exists.")
+            print(f"Folder '{folder_name}' already exists.")
 
-# Specify the main folder path here
-main_folder_path = "G:/My Folder"  # Change this path as needed
+if __name__ == "__main__":
+    # Interactive user input
+    print("Welcome to Mass Folder Builder!")
+    main_folder_path = input("Enter the main folder path: ").strip()
+    if not main_folder_path:
+        print("Main folder path cannot be empty. Exiting...")
+        exit()
 
-# Run the function
-create_folders(main_folder_path)
+    folder_prefix = input("Enter a prefix for the folders (leave blank for none): ").strip()
+    if folder_prefix:
+        folder_prefix += " "  # Add a space after the prefix if it's not empty
+
+    try:
+        num_folders = int(input("Enter the number of folders to create: ").strip())
+        if num_folders <= 0:
+            raise ValueError("The number of folders must be greater than 0.")
+    except ValueError as e:
+        print(f"Invalid input: {e}. Exiting...")
+        exit()
+
+    # Run the folder creation function only after all input is valid
+    create_folders(main_folder_path, folder_prefix, num_folders)
+
